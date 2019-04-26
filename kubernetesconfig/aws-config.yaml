@@ -1,0 +1,3 @@
+pheonix:
+  kinesis: pheonix-stream
+  dynamodb: rivers
