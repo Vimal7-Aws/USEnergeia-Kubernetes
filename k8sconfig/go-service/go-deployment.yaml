@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-deployment
+  labels:
+    app: go-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: go-middleware
+      tier: middleware
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+      labels:
+        app: go-middleware
+        tier: middleware
+        version: v1
+    spec:
+      containers:
+        - name: go-middleware-1
+          image: gcr.io/golden-tenure-231009/go-service:1.0
+          ports:
+            - containerPort: 2050
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 2050
+            initialDelaySeconds: 5
+            periodSeconds: 5

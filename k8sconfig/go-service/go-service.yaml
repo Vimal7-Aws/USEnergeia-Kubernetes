@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: go-service
+spec:
+  selector:
+    app: go-service
+  ports:
+    - name: http
+      port: 2050

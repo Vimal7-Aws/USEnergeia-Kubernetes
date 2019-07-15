@@ -7,7 +7,7 @@
 
 # .tfvars files
 *.tfvars
-
+*.json
 *.zip
 files/
 .gradle/
