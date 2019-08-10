@@ -5,7 +5,7 @@ metadata:
   labels:
     app: go-state-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: go-middleware-1
@@ -18,11 +18,46 @@ spec:
         app: go-middleware-1
         tier: middleware
         version: v1
-
     spec:
       containers:
         - name: go-middleware-1
           image: gcr.io/golden-tenure-231009/go-stateservice:1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7070
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 7070
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-state-deployment-v2
+  labels:
+    app: go-state-deployment
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-middleware-1
+      tier: middleware
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+      labels:
+        app: go-middleware-1
+        tier: middleware
+        version: v2
+    spec:
+      containers:
+        - name: go-middleware-1
+          image: gcr.io/golden-tenure-231009/go-stateservice:2.0
+          imagePullPolicy: Always
           ports:
             - containerPort: 7070
           livenessProbe:
